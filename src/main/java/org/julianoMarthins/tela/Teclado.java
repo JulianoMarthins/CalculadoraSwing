@@ -1,10 +1,14 @@
 package org.julianoMarthins.tela;
 
+import org.julianoMarthins.modelo.Memoria;
+
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 
 @SuppressWarnings("serial")
-public class Teclado extends JPanel {
+public class Teclado extends JPanel implements ActionListener {
 
     private final Color corCinzaEscuro = new Color(68, 68, 68);
     private final Color corCinzaClaro = new Color(99, 99, 99);
@@ -39,44 +43,52 @@ public class Teclado extends JPanel {
 
         // Linha 01
         cons.gridwidth = 2;
-        adicionarBotao("AC", corCinzaEscuro, cons, 0, 0);
+        addButton("AC", corCinzaEscuro, cons, 0, 0);
         cons.gridwidth = 1;
-        adicionarBotao("%", corCinzaEscuro, cons, 0, 2);
-        adicionarBotao("/", corLaranja, cons, 0, 3 );
+        addButton("%", corCinzaEscuro, cons, 0, 2);
+        addButton("/", corLaranja, cons, 0, 3 );
 
         // Linha 02
-        adicionarBotao("7", corCinzaClaro, cons, 1, 0);
-        adicionarBotao("8", corCinzaClaro, cons, 1, 1);
-        adicionarBotao("9", corCinzaClaro, cons, 1, 2);
-        adicionarBotao("X", corLaranja, cons, 1, 3);
+        addButton("7", corCinzaClaro, cons, 1, 0);
+        addButton("8", corCinzaClaro, cons, 1, 1);
+        addButton("9", corCinzaClaro, cons, 1, 2);
+        addButton("X", corLaranja, cons, 1, 3);
 
         // Linha 03
-        adicionarBotao("4", corCinzaClaro, cons, 2, 0);
-        adicionarBotao("5", corCinzaClaro, cons, 2, 1);
-        adicionarBotao("6", corCinzaClaro, cons, 2, 2);
-        adicionarBotao("-", corLaranja, cons, 2, 3);
+        addButton("4", corCinzaClaro, cons, 2, 0);
+        addButton("5", corCinzaClaro, cons, 2, 1);
+        addButton("6", corCinzaClaro, cons, 2, 2);
+        addButton("-", corLaranja, cons, 2, 3);
 
         // Linha 04
-        adicionarBotao("1", corCinzaClaro, cons, 3, 0);
-        adicionarBotao("2",corCinzaClaro, cons, 3, 1 );
-        adicionarBotao("3", corCinzaClaro, cons, 3, 2);
-        adicionarBotao("+", corLaranja, cons, 3, 3);
+        addButton("1", corCinzaClaro, cons, 3, 0);
+        addButton("2",corCinzaClaro, cons, 3, 1 );
+        addButton("3", corCinzaClaro, cons, 3, 2);
+        addButton("+", corLaranja, cons, 3, 3);
 
         //Linha 05
         cons.gridwidth = 2;
-        adicionarBotao("0", corCinzaClaro, cons, 4, 0);
+        addButton("0", corCinzaClaro, cons, 4, 0);
         cons.gridwidth = 1;
-        adicionarBotao(",", corCinzaClaro, cons, 4, 2);
-        adicionarBotao("=", corLaranja, cons, 4, 3);
+        addButton(",", corCinzaClaro, cons, 4, 2);
+        addButton("=", corLaranja, cons, 4, 3);
     }
 
-    private void adicionarBotao(String texto, Color cor, GridBagConstraints cons, int y, int x  ){
+    private void addButton(String texto, Color cor, GridBagConstraints cons, int y, int x  ){
         cons.gridy = y;
         cons.gridx = x;
 
-        Botao botao = new Botao(texto, cor);
+        Botao button = new Botao(texto, cor);
+        button.addActionListener(this::actionPerformed);
+        add(button, cons);
 
-        add(botao, cons);
+    }
 
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        if(e.getSource() instanceof JButton) {
+            JButton button = (JButton) e.getSource();
+            Memoria.getInstancia().processarComando(button.getText());
+        }
     }
 }

@@ -1,10 +1,13 @@
 package org.julianoMarthins.tela;
 
+import org.julianoMarthins.modelo.Memoria;
+import org.julianoMarthins.modelo.Observador;
+
 import javax.swing.*;
 import java.awt.*;
 
 @SuppressWarnings("serial")
-public class Display extends JPanel {
+public class Display extends JPanel implements Observador {
     /*
     Jpanel é uma classe conhecida como 'Conteiners' onde é utilizada para axuliar a criação de telas mais complexas.
     No casso deste programa, podemos programar diferentes elementos gráficos dividos em classes e com a ajuda do Jpanel
@@ -17,8 +20,10 @@ public class Display extends JPanel {
     private final JLabel label;
 
     public Display() {
+        Memoria.getInstancia().addObservador(this::valorAlterado);
+
         setBackground(new Color(46, 49, 50)); // Insere cor personalizada ao display
-        label = new JLabel("1234,56"); // Teste de impressão no display, observe que lê Strings
+        label = new JLabel(Memoria.getInstancia().getTextoAtual()); // Pega da memória o valor armazenado
         label.setForeground(Color.WHITE); // Altera a cor da fonte
 
         /*
@@ -45,5 +50,8 @@ public class Display extends JPanel {
 
     }
 
-
+    @Override
+    public void valorAlterado(String novoValor) {
+        label.setText(novoValor);
+    }
 }
