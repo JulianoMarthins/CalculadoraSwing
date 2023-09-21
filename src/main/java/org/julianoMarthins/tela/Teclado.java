@@ -24,7 +24,7 @@ public class Teclado extends JPanel implements ActionListener {
      */
 
 
-    public Teclado(){
+    public Teclado() {
         GridBagLayout layout = new GridBagLayout();
         GridBagConstraints cons = new GridBagConstraints();
 
@@ -42,17 +42,16 @@ public class Teclado extends JPanel implements ActionListener {
         cons.fill = GridBagConstraints.BOTH; // Método faz os botoes ficarem todos juntos.
 
         // Linha 01
-        cons.gridwidth = 2;
         addButton("AC", corCinzaEscuro, cons, 0, 0);
-        cons.gridwidth = 1;
+        addButton("±", corCinzaEscuro, cons, 0, 1);
         addButton("%", corCinzaEscuro, cons, 0, 2);
-        addButton("/", corLaranja, cons, 0, 3 );
+        addButton("/", corLaranja, cons, 0, 3);
 
         // Linha 02
         addButton("7", corCinzaClaro, cons, 1, 0);
         addButton("8", corCinzaClaro, cons, 1, 1);
         addButton("9", corCinzaClaro, cons, 1, 2);
-        addButton("X", corLaranja, cons, 1, 3);
+        addButton("x", corLaranja, cons, 1, 3);
 
         // Linha 03
         addButton("4", corCinzaClaro, cons, 2, 0);
@@ -62,7 +61,7 @@ public class Teclado extends JPanel implements ActionListener {
 
         // Linha 04
         addButton("1", corCinzaClaro, cons, 3, 0);
-        addButton("2",corCinzaClaro, cons, 3, 1 );
+        addButton("2", corCinzaClaro, cons, 3, 1);
         addButton("3", corCinzaClaro, cons, 3, 2);
         addButton("+", corLaranja, cons, 3, 3);
 
@@ -74,7 +73,7 @@ public class Teclado extends JPanel implements ActionListener {
         addButton("=", corLaranja, cons, 4, 3);
     }
 
-    private void addButton(String texto, Color cor, GridBagConstraints cons, int y, int x  ){
+    private void addButton(String texto, Color cor, GridBagConstraints cons, int y, int x) {
         cons.gridy = y;
         cons.gridx = x;
 
@@ -86,7 +85,7 @@ public class Teclado extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        if(e.getSource() instanceof JButton) {
+        if (e.getSource() instanceof JButton) {
             JButton button = (JButton) e.getSource();
             Memoria.getInstancia().processarComando(button.getText());
         }

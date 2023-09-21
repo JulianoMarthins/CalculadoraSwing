@@ -10,7 +10,7 @@ public class Calculadora extends JFrame {
 
 
     // Construtor
-    public Calculadora(){
+    public Calculadora() {
 
         organizarLayout();
 
@@ -45,7 +45,7 @@ public class Calculadora extends JFrame {
     }
 
 
-    public void organizarLayout(){
+    public void organizarLayout() {
 
         /*
         BorderLayout é um gerenciador de Layout, ele define a tela em 'norte, sul, lest, oeste e centro'. Como nossa

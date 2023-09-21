@@ -26,6 +26,8 @@ public class Display extends JPanel implements Observador {
         label = new JLabel(Memoria.getInstancia().getTextoAtual()); // Pega da memória o valor armazenado
         label.setForeground(Color.WHITE); // Altera a cor da fonte
 
+
+
         /*
         A linha de código abaixo configurará a fonte do display, A instanciação de uma nova fonte passa como argumentos
         qual fonte usar, neste casso a fonte escolida é 'courier', o código Font.PLAIN é refenrete a deixar a fonte

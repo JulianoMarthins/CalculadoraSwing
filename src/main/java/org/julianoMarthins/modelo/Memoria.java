@@ -7,13 +7,16 @@ import java.util.Objects;
 public class Memoria {
 
     private enum TipoComando {
-        ZERAR, NUMERO, DIV, MULT, SUB, SOMA, IGUAL, VIRGULA
+        ZERAR, SINAL, NUMERO, DIV, MULT, SUB, SOMA, IGUAL, PORCENTO, VIRGULA
     }
 
     private static final Memoria instancia = new Memoria();
     private final List<Observador> observadoresList = new ArrayList<>();
 
+    private TipoComando ultimaOperacao = null;
+    private Boolean substituir = false;
     private String textoAtual = "";
+    private String textoBuffer = "";
 
     /*
     A criação de um método privado protege o programa para que ele seja criado somente um objeto desta classe, este
@@ -39,16 +42,62 @@ public class Memoria {
     public void processarComando(String texto) {
         TipoComando tipo = detectarTipoComando(texto);
 
-
-        if ("AC".equals(texto)) {
-            this.textoAtual = "";
-            System.out.println(texto);
-            observadoresList.forEach(x -> x.valorAlterado(getTextoAtual()));
+        if (tipo == null) {
+            return;
+        } else if (tipo == TipoComando.ZERAR) {
+            textoAtual = "";
+            textoBuffer = "";
+            substituir = false;
+            ultimaOperacao = null;
+        } else if (tipo == TipoComando.SINAL && textoAtual.contains("-")) {
+            textoAtual = textoAtual.substring(1);
+        } else if (tipo == TipoComando.SINAL && !textoAtual.contains("-")) {
+            textoAtual = "-" + textoAtual;
+        } else if (tipo == TipoComando.NUMERO || tipo == TipoComando.VIRGULA) {
+            textoAtual = substituir ? texto : textoAtual + texto;
+            substituir = false;
         } else {
-            this.textoAtual += texto;
-            System.out.println(texto);
-            observadoresList.forEach(x -> x.valorAlterado(textoAtual));
+
+            substituir = true;
+            textoAtual = obterResultadoOperacao();
+            textoBuffer = textoAtual;
+            ultimaOperacao = tipo;
+
         }
+
+        observadoresList.forEach(x -> x.valorAlterado(getTextoAtual()));
+
+    }
+
+    private String obterResultadoOperacao() {
+        if (ultimaOperacao == null || ultimaOperacao == TipoComando.IGUAL) {
+            return textoAtual;
+        }
+
+        double numBuffer = Double.parseDouble(textoBuffer.replace(", ", "."));
+        double numAtual = Double.parseDouble(textoAtual.replace(",", "."));
+        double resultado = 0.0;
+
+        if (ultimaOperacao == TipoComando.SOMA) {
+            resultado = numBuffer + numAtual;
+        } else if (ultimaOperacao == TipoComando.SUB) {
+            resultado = numBuffer - numAtual;
+        } else if (ultimaOperacao == TipoComando.DIV) {
+            resultado = numBuffer / numAtual;
+        } else if (ultimaOperacao == TipoComando.MULT) {
+            resultado = numBuffer * numAtual;
+        } else if (ultimaOperacao == TipoComando.PORCENTO) {
+            if (ultimaOperacao == TipoComando.SOMA) {
+                resultado = numAtual + numAtual * 100 / numBuffer;
+            } else if (ultimaOperacao == TipoComando.SUB) {
+                resultado = numAtual - numAtual * 100 / numBuffer;
+            }
+        }
+
+        String resultadoConvertido = Double.toString(resultado).replace(".", ",");
+        boolean inteiro = resultadoConvertido.endsWith(",0");
+        return inteiro ? resultadoConvertido.replace(",0", "") : resultadoConvertido;
+
     }
 
 
@@ -80,7 +129,11 @@ public class Memoria {
             if ("=".equals(texto)) {
                 return TipoComando.IGUAL;
             }
-            if (",".equals(texto)) {
+            if ("±".equals(texto)) {
+                return TipoComando.SINAL;
+            }
+
+            if (",".equals(texto) && !textoAtual.contains(",")) {
                 return TipoComando.VIRGULA;
             }
         }
